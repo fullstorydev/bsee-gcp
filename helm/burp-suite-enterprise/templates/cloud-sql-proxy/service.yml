@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "kebabcase-release-name" . }}-cloud-sql-proxy
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: cloud-sql-proxy
+    app.kubernetes.io/component: server
+    app: burp-suite-enterprise
+{{ include "recommended-labels" . | indent 4 }}
+spec:
+  selector:
+    app.portswigger.net/name: {{ include "kebabcase-release-name" . }}-cloud-sql-proxy
+  ports:
+    - name: postgres
+      protocol: TCP
+      port: 5432

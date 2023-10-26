@@ -1,0 +1,16 @@
+# Note: This file only contains values changed from the original values in BSEE's helm chart
+database:
+  # -- JDBC connection URL for the database
+  url: "jdbc:postgresql://burp-suite-enterprise-cloud-sql-proxy.burp.svc.cluster.local:5432/burp_enterprise"
+  # -- Username for the Enterprise Server database connection
+  enterpriseServerUsername: "burp_enterprise"
+  # enterpriseServerPassword: TODO: this value should be filled in with the TF generated password: random_password.user_pwd["burp_enterprise"].result
+  # -- Username for the Scanning Resource database connection
+  scanningResourceUsername: "burp_agent"
+  # scanningResourcePassword: TODO: this value should be filled in with the TF generated password: random_password.user_pwd["burp_agent"].result
+# values not defined in the helm chart downloaded from portswigger
+custom:
+  network: default
+  databaseInstanceName: burp
+  gcpProject: name-of-gcp-project
+  databaseRegion: us-central1

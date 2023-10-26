@@ -1,0 +1,15 @@
+# copied from https://cloud.google.com/kubernetes-engine/docs/how-to/persistent-volumes/filestore-csi-driver#storage-class
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: networked-standard-filestore
+provisioner: filestore.csi.storage.gke.io
+volumeBindingMode: Immediate
+allowVolumeExpansion: true
+parameters:
+  # "CIDR range to allocate Filestore IP Ranges from"
+  # reserved-ipv4-cidr: 192.168.92.22/26
+  # # standard (default) or premier or enterprise
+  tier: standard
+  # # Name of the VPC. Note that non-default VPCs require special firewall rules to be setup
+  network: { { .Values.custom.network } }

@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "kebabcase-release-name" . }}-cloud-sql-proxy
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: cloud-sql-proxy
+    app: burp-suite-enterprise
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.portswigger.net/name: {{ include "kebabcase-release-name" . }}-cloud-sql-proxy
+  template:
+    metadata:
+      labels:
+        app.portswigger.net/name: {{ include "kebabcase-release-name" . }}-cloud-sql-proxy
+        app.kubernetes.io/name: cloud-sql-proxy
+        app: burp-suite-enterprise
+      annotations:
+        seccomp.security.alpha.kubernetes.io/defaultProfileName: runtime/default
+    spec:
+      serviceAccountName: {{ include "kebabcase-release-name" . }}-cloud-sql-proxy
+      securityContext:
+        runAsUser: 42877
+        runAsGroup: 42877
+        fsGroup: 42877
+        fsGroupChangePolicy: OnRootMismatch
+      containers:
+        - name: cloud-sql-proxy
+          ports:
+            - name: postgres
+              containerPort: 5432
+          image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.6.0
+          args:
+            - "--address=0.0.0.0"
+            - "--structured-logs"
+            - "--port=5432"
+            - "{{ .Values.custom.gcpProject }}:{{ .Values.custom.databaseRegion }}:{{ .Values.custom.databaseInstanceName }}"
+          securityContext:
+            runAsNonRoot: true

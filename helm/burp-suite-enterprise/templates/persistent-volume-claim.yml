@@ -1,0 +1,16 @@
+# copied from https://cloud.google.com/kubernetes-engine/docs/how-to/persistent-volumes/filestore-csi-driver#pvc
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ .Values.persistentVolumeClaim }}
+  labels:
+    app.kubernetes.io/name: {{ .Values.persistentVolumeClaim }}
+    app.kubernetes.io/component: cluster
+    app.kubernetes.io/part-of: {{ .Values.applicationName }}
+spec:
+  accessModes:
+  - ReadWriteMany
+  storageClassName: networked-standard-filestore
+  resources:
+    requests:
+      storage: 1Ti
